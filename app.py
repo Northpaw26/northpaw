@@ -271,9 +271,24 @@ if go:
             prompt = build_prompt(location, month, category, intent, extra, ranked, flags, assumptions)
             output = call_llm(prompt)
 
-        with st.container():
-            st.subheader("✅ Northpaw Recommendation")
-            st.write(output)
+with st.container():
+    st.subheader("✅ Northpaw Recommendation")
+st.write(output)
+
+if "Confidence: High" in output:
+    st.success("Confidence: High")
+elif "Confidence: Medium" in output:
+    st.warning("Confidence: Medium")
+elif "Confidence: Low" in output:
+    st.error("Confidence: Low")
+
+
+    st.markdown("### 🧭 Pathway Scores")
+
+    for p in ranked:
+        st.write(f"**{p['name']}**")
+        st.progress(p["score"] / 10)
+
 
         with st.expander("🧾 Quick ‘Do Not Donate’ reminder"):
             st.write("\n".join([f"- {x}" for x in DO_NOT_DONATE.get(category, [])]))
